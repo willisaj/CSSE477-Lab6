@@ -1,23 +1,23 @@
 package edu.rosehulman.platform;
 
-import edu.rosehulman.plugin.Plugin;
+import edu.rosehulman.plugin.AbstractPlugin;
 
 public class LifecycleControl {
-	public void startPlugin(Plugin plugin) {
+	public void startPlugin(AbstractPlugin plugin) {
 		// TODO: system-level startup
 		
 		
 		plugin.onStart();
 	}
 
-	public void stopPlugin(Plugin plugin) {
+	public void stopPlugin(AbstractPlugin plugin) {
 		// TODO: system-level stop
 		
 		
 		plugin.onStop();
 	}
 
-	public void pausePlugin(Plugin plugin) {
+	public void pausePlugin(AbstractPlugin plugin) {
 		// TODO: system-level pause
 		
 		
@@ -25,7 +25,7 @@ public class LifecycleControl {
 
 	}
 
-	public void resumePlugin(Plugin plugin) {
+	public void resumePlugin(AbstractPlugin plugin) {
 		// TODO: system-level resume
 		
 		

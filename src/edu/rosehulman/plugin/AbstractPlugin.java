@@ -1,6 +1,6 @@
 package edu.rosehulman.plugin;
 
-public abstract class Plugin {
+public abstract class AbstractPlugin {
 	public void onStart() {
 		// TODO: default start
 	}
