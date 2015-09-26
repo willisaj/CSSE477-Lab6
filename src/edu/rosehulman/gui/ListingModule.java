@@ -1,4 +1,4 @@
-package edu.plugin.gui;
+package edu.rosehulman.gui;
 
 public class ListingModule {
 
