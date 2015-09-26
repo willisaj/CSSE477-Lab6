@@ -1,4 +1,4 @@
-package edu.platform.gui;
+package edu.plugin.gui;
 
 public class ListingModule {
 
