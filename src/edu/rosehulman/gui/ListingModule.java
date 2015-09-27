@@ -70,6 +70,7 @@ public class ListingModule extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO: run selected plugin
+				System.out.println("Running plugin \"" + listView.getSelectedValue() + "\"");
 
 			}
 		}));
