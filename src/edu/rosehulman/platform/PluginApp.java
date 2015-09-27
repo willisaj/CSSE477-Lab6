@@ -14,12 +14,14 @@ import javax.swing.WindowConstants;
 
 import edu.rosehulman.gui.ExecutionModule;
 import edu.rosehulman.gui.IExecutionModule;
+import edu.rosehulman.gui.PluginStatusModule;
 import edu.rosehulman.gui.StatusModule;
 
 public class PluginApp extends JFrame {
 	
 	private IExecutionModule executionModule;
 	private StatusModule statusModule;
+	private PluginStatusModule pluginStatusModule;
 	
 	public PluginApp() {
 		super("Super Awesome Application for Running Plugins");
@@ -31,8 +33,8 @@ public class PluginApp extends JFrame {
 		//ExecutionModule
 		this.executionModule = new ExecutionModule();
 		this.add((JComponent)executionModule, BorderLayout.CENTER);
-		executionModule.showComponent(new JButton("Hello World!"));
 		
+		//TODO: Listing Module
 		Button listing = new Button("Listing");
 		this.add(listing, BorderLayout.WEST);
 		
@@ -43,10 +45,12 @@ public class PluginApp extends JFrame {
 		this.statusModule = new StatusModule(1220, 610);
 		southPanel.add(statusModule, BorderLayout.CENTER);
 		
-		Button controlModule = new Button("Control MOdule");
-		controlModule.setPreferredSize(new Dimension(200, 200));
-		controlModule.setSize(new Dimension(200, 200));
-		southPanel.add(controlModule, BorderLayout.WEST);
+		//Plugin Status Module
+		this.pluginStatusModule = new PluginStatusModule();
+		this.pluginStatusModule.setPreferredSize(new Dimension(200, 200));
+		this.pluginStatusModule.showNoPlugin();
+		southPanel.add(this.pluginStatusModule, BorderLayout.WEST);
+		
 		this.add(southPanel, BorderLayout.SOUTH);
 	}
 	
