@@ -1,7 +1,6 @@
 package edu.rosehulman.platform;
 
 import java.awt.BorderLayout;
-import java.awt.Button;
 import java.awt.Dimension;
 import java.io.IOException;
 
@@ -21,20 +20,25 @@ public class PluginApp extends JFrame {
 	private IExecutionModule executionModule;
 	private StatusModule statusModule;
 	private PluginStatusModule pluginStatusModule;
+	private LifecycleController lifecycleController;
 	
 	public PluginApp() throws IOException {
 		super("Super Awesome Application for Running Plugins");
-		// TODO TODO: set stdout to route to the status module
+
 		this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		this.setLayout(new BorderLayout());
 		this.setSize(1440, 810);
 
 		//ExecutionModule
 		this.executionModule = new ExecutionModule();
-		this.add((JComponent)executionModule, BorderLayout.CENTER);
+		this.add((JComponent) executionModule, BorderLayout.CENTER);
+		System.out.println(executionModule.getWidth());
 		
+		//LifecycleControl
+		this.lifecycleController = new LifecycleController(executionModule);
+
 		//Listing Module
-		ListingModule listing = new ListingModule("file:///" + PluginManager.PLUGIN_ROOT);
+		ListingModule listing = new ListingModule("file:///" + PluginManager.PLUGIN_ROOT, lifecycleController);
 		listing.setSize(200, 610);
 		listing.setPreferredSize(new Dimension(200, 610));
 		this.add(listing, BorderLayout.WEST);
@@ -57,6 +61,7 @@ public class PluginApp extends JFrame {
 	
 	public static void main(String[] args) throws IOException {
 		PluginApp app = new PluginApp();
+		// TODO TODO: set stdout and stderr to route to the status modules
 		app.setVisible(true);
 	}
 

@@ -34,7 +34,7 @@ import javax.swing.JScrollPane;
 import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
 
-import edu.rosehulman.platform.LifecycleControl;
+import edu.rosehulman.platform.LifecycleController;
 import edu.rosehulman.platform.PluginManager;
 
 public class ListingModule extends JPanel {
@@ -48,11 +48,9 @@ public class ListingModule extends JPanel {
 	private Dimension size;
 
 	@SuppressWarnings("serial")
-	public ListingModule(String pathString) throws IOException {
+	public ListingModule(String pathString, LifecycleController lifecycleControl) throws IOException {
 		size = new Dimension(MIN_WIDTH, MIN_HEIGHT);
 		listModel = new DefaultListModel<>();
-		// TODO: use the right instance
-		LifecycleControl lifecycleControl = new LifecycleControl();
 		listModel.addListDataListener(lifecycleControl);
 
 		// Watch for directory changes
@@ -106,7 +104,6 @@ public class ListingModule extends JPanel {
 				try {
 					listenForDirectoryChanges();
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -143,7 +140,6 @@ public class ListingModule extends JPanel {
 
 				if (kind == StandardWatchEventKinds.ENTRY_CREATE) {
 					listModel.addElement(filename);
-//					sortListModel();
 				} else if (kind == StandardWatchEventKinds.ENTRY_DELETE) {
 					listModel.removeElement(filename);
 				}
@@ -155,17 +151,6 @@ public class ListingModule extends JPanel {
 		}
 	}
 	
-	private void sortListModel() {
-		List<String> files = Collections.list(listModel.elements());
-		listModel.clear();
-		
-		Collections.sort(files);
-
-		for (String fp : files) {
-			listModel.addElement(fp);
-		}
-	}
-
 	/**
 	 * Main method for testing listing module
 	 * @param args
@@ -174,7 +159,7 @@ public class ListingModule extends JPanel {
 	public static void main(String[] args) throws IOException {
 		JFrame window = new JFrame("ListModule test");
 		window.setSize(new Dimension(MIN_WIDTH, MIN_HEIGHT));
-		ListingModule module = new ListingModule("file:///" + PluginManager.PLUGIN_ROOT);
+		ListingModule module = new ListingModule("file:///" + PluginManager.PLUGIN_ROOT, null);
 		window.add(module);
 		window.setVisible(true);
 		
