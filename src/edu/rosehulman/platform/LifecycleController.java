@@ -45,32 +45,32 @@ public class LifecycleController implements ListDataListener {
 	}
 
 	private void importPlugin(String path) {
-//		JarClassLoader jarLoader = new JarClassLoader(PluginManager.PLUGIN_ROOT + "/" + path);
-//		/* Load the class from the jar file and resolve it. */
-//		Class c;
-//		try {
-//			c = (Class<AbstractPlugin>) jarLoader.loadClass(AbstractPlugin.class.getName(), true);
-//		} catch (ClassNotFoundException e1) {
-//			System.err.println("Loading class failed");
-//			return;
-//		}
-//		/*
-//		 * Create an instance of the class.
-//		 * 
-//		 * Note that created object's constructor-taking-no-arguments will be
-//		 * called as part of the object's creation.
-//		 */
-//		Object o = null;
-//		try {
-//			Constructor ctor = c.getDeclaredConstructor(IExecutionModule.class);
-//			o = ctor.newInstance(executionPanel);
-//		} catch (Exception e) {
-//			System.err.println("Failed to load class: " + e);
-//		}
-//		if (o instanceof AbstractPlugin) {
-//			AbstractPlugin plugin = (AbstractPlugin) o;
-//			this.installedPlugins.put(path, plugin);
-//		}
+		JarClassLoader jarLoader = new JarClassLoader(PluginManager.PLUGIN_ROOT + "/" + path);
+		/* Load the class from the jar file and resolve it. */
+		Class c;
+		try {
+			c = (Class<AbstractPlugin>) jarLoader.loadClass(AbstractPlugin.class.getName(), true);
+		} catch (ClassNotFoundException e1) {
+			System.err.println("Loading class failed");
+			return;
+		}
+		/*
+		 * Create an instance of the class.
+		 * 
+		 * Note that created object's constructor-taking-no-arguments will be
+		 * called as part of the object's creation.
+		 */
+		Object o = null;
+		try {
+			Constructor ctor = c.getDeclaredConstructor(IExecutionModule.class);
+			o = ctor.newInstance(executionPanel);
+		} catch (Exception e) {
+			System.err.println("Failed to load class: " + e);
+		}
+		if (o instanceof AbstractPlugin) {
+			AbstractPlugin plugin = (AbstractPlugin) o;
+			this.installedPlugins.put(path, plugin);
+		}
 	}
 
 	public void deletePlugin(String path) {
