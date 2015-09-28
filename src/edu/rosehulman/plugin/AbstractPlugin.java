@@ -1,14 +1,14 @@
 package edu.rosehulman.plugin;
 
-import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 public abstract class AbstractPlugin {
-	protected JFrame frame;
+	protected JPanel panel;
 	protected boolean started = false;
 	protected boolean paused = false;
 
-	public AbstractPlugin(JFrame frame) {
-		this.frame = frame;
+	public AbstractPlugin(JPanel panel) {
+		this.panel = panel;
 	}
 
 	public void onStart() {

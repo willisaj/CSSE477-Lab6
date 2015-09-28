@@ -3,6 +3,7 @@ package edu.rosehulman.platform;
 import java.awt.BorderLayout;
 import java.awt.Button;
 import java.awt.Dimension;
+import java.io.IOException;
 
 import javax.swing.JComponent;
 import javax.swing.JFrame;
@@ -10,7 +11,9 @@ import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
 import edu.rosehulman.gui.ExecutionModule;
+import edu.rosehulman.gui.IExecutionModule;
 import edu.rosehulman.gui.ListingModule;
+import edu.rosehulman.gui.PluginStatusModule;
 import edu.rosehulman.gui.StatusModule;
 
 public class PluginApp extends JFrame {
@@ -19,7 +22,7 @@ public class PluginApp extends JFrame {
 	private StatusModule statusModule;
 	private PluginStatusModule pluginStatusModule;
 	
-	public PluginApp() {
+	public PluginApp() throws IOException {
 		super("Super Awesome Application for Running Plugins");
 		// TODO TODO: set stdout to route to the status module
 		this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -31,7 +34,9 @@ public class PluginApp extends JFrame {
 		this.add((JComponent)executionModule, BorderLayout.CENTER);
 		
 		//Listing Module
-		ListingModule listing = new ListingModule(PluginManager.PLUGIN_ROOT);
+		ListingModule listing = new ListingModule("file:///" + PluginManager.PLUGIN_ROOT);
+		listing.setSize(200, 610);
+		listing.setPreferredSize(new Dimension(200, 610));
 		this.add(listing, BorderLayout.WEST);
 		
 		JPanel southPanel = new JPanel();
@@ -50,7 +55,7 @@ public class PluginApp extends JFrame {
 		this.add(southPanel, BorderLayout.SOUTH);
 	}
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
 		PluginApp app = new PluginApp();
 		app.setVisible(true);
 	}

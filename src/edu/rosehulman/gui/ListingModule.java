@@ -18,6 +18,7 @@ import java.nio.file.StandardWatchEventKinds;
 import java.nio.file.WatchEvent;
 import java.nio.file.WatchKey;
 import java.nio.file.WatchService;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -33,6 +34,7 @@ import javax.swing.JScrollPane;
 import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
 
+import edu.rosehulman.platform.LifecycleControl;
 import edu.rosehulman.platform.PluginManager;
 
 public class ListingModule extends JPanel {
@@ -49,23 +51,32 @@ public class ListingModule extends JPanel {
 	public ListingModule(String pathString) throws IOException {
 		size = new Dimension(MIN_WIDTH, MIN_HEIGHT);
 		listModel = new DefaultListModel<>();
+		// TODO: use the right instance
+		LifecycleControl lifecycleControl = new LifecycleControl();
+		listModel.addListDataListener(lifecycleControl);
 
 		// Watch for directory changes
 		watcher = FileSystems.getDefault().newWatchService();
-		Path path = Paths.get(URI.create(pathString.replace("\\", "//")));
+		Path path = Paths.get(URI.create(pathString.replace("\\", "//").replace(" ", "%20")));
 		path.register(watcher, StandardWatchEventKinds.ENTRY_CREATE, StandardWatchEventKinds.ENTRY_DELETE);
+		
+		List<String> files = new ArrayList<>();
 		try (DirectoryStream<Path> stream = Files.newDirectoryStream(path)) {
-		    for (Path file: stream) {
-		        listModel.addElement(file.getFileName().toString());
+		    for (Path file : stream) {
+		    	files.add(file.getFileName().toString());
 		    }
 		} catch (IOException | DirectoryIteratorException x) {
 		    System.err.println(x);
 		}
 		
-		sortListModel();
+		Collections.sort(files);
+		
+		for (String file : files) {
+			listModel.addElement(file);
+		}
 
 		// Initialize and display list
-		JList<String> listView = new JList<>(listModel);
+		final JList<String> listView = new JList<>(listModel);
 		listView.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		
 		// This adds the listener to the listView
@@ -74,7 +85,7 @@ public class ListingModule extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 				// TODO: run selected plugin
 				System.out.println("Running plugin \"" + listView.getSelectedValue() + "\"");
-
+				
 			}
 		});
 
@@ -132,7 +143,7 @@ public class ListingModule extends JPanel {
 
 				if (kind == StandardWatchEventKinds.ENTRY_CREATE) {
 					listModel.addElement(filename);
-					sortListModel();
+//					sortListModel();
 				} else if (kind == StandardWatchEventKinds.ENTRY_DELETE) {
 					listModel.removeElement(filename);
 				}
