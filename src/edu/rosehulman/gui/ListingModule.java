@@ -48,11 +48,11 @@ public class ListingModule extends JPanel {
 	private Dimension size;
 
 	@SuppressWarnings("serial")
-	public ListingModule(String pathString) throws IOException {
+	public ListingModule(String pathString, IExecutionModule executionModule) throws IOException {
 		size = new Dimension(MIN_WIDTH, MIN_HEIGHT);
 		listModel = new DefaultListModel<>();
 		// TODO: use the right instance
-		LifecycleControl lifecycleControl = new LifecycleControl();
+		LifecycleControl lifecycleControl = new LifecycleControl(executionModule);
 		listModel.addListDataListener(lifecycleControl);
 
 		// Watch for directory changes
@@ -174,7 +174,7 @@ public class ListingModule extends JPanel {
 	public static void main(String[] args) throws IOException {
 		JFrame window = new JFrame("ListModule test");
 		window.setSize(new Dimension(MIN_WIDTH, MIN_HEIGHT));
-		ListingModule module = new ListingModule("file:///" + PluginManager.PLUGIN_ROOT);
+		ListingModule module = new ListingModule("file:///" + PluginManager.PLUGIN_ROOT, new ExecutionModule());
 		window.add(module);
 		window.setVisible(true);
 		

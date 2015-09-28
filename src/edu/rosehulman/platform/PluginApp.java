@@ -5,6 +5,7 @@ import java.awt.Button;
 import java.awt.Dimension;
 import java.io.IOException;
 
+import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -34,7 +35,7 @@ public class PluginApp extends JFrame {
 		this.add((JComponent)executionModule, BorderLayout.CENTER);
 		
 		//Listing Module
-		ListingModule listing = new ListingModule("file:///" + PluginManager.PLUGIN_ROOT);
+		ListingModule listing = new ListingModule("file:///" + PluginManager.PLUGIN_ROOT, executionModule);
 		listing.setSize(200, 610);
 		listing.setPreferredSize(new Dimension(200, 610));
 		this.add(listing, BorderLayout.WEST);

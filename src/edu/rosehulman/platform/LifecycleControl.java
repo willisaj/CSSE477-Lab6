@@ -8,13 +8,14 @@ import javax.swing.ListModel;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
 
+import edu.rosehulman.gui.IExecutionModule;
 import edu.rosehulman.plugin.AbstractPlugin;
 
 public class LifecycleControl implements ListDataListener {
 	private Map<String, AbstractPlugin> installedPlugins;
-	private JPanel executionPanel;
+	private IExecutionModule executionPanel;
 
-	public LifecycleControl(JPanel executionPanel) {
+	public LifecycleControl(IExecutionModule executionPanel) {
 		this.executionPanel = executionPanel;
 	}
 	
@@ -61,7 +62,7 @@ public class LifecycleControl implements ListDataListener {
 		 */
 		Object o = null;
 		try {
-			Constructor ctor = c.getDeclaredConstructor(JPanel.class);
+			Constructor ctor = c.getDeclaredConstructor(IExecutionModule.class);
 			o = ctor.newInstance(executionPanel);
 		} catch (Exception e) {
 			System.err.println("Failed to load class: " + e);
