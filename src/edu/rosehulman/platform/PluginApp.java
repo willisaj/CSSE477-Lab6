@@ -3,18 +3,14 @@ package edu.rosehulman.platform;
 import java.awt.BorderLayout;
 import java.awt.Button;
 import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
-import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
 import edu.rosehulman.gui.ExecutionModule;
-import edu.rosehulman.gui.IExecutionModule;
-import edu.rosehulman.gui.PluginStatusModule;
+import edu.rosehulman.gui.ListingModule;
 import edu.rosehulman.gui.StatusModule;
 
 public class PluginApp extends JFrame {
@@ -34,8 +30,8 @@ public class PluginApp extends JFrame {
 		this.executionModule = new ExecutionModule();
 		this.add((JComponent)executionModule, BorderLayout.CENTER);
 		
-		//TODO: Listing Module
-		Button listing = new Button("Listing");
+		//Listing Module
+		ListingModule listing = new ListingModule(PluginManager.PLUGIN_ROOT);
 		this.add(listing, BorderLayout.WEST);
 		
 		JPanel southPanel = new JPanel();
