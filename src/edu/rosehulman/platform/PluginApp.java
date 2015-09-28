@@ -21,7 +21,7 @@ public class PluginApp extends JFrame {
 	
 	public PluginApp() {
 		super("Super Awesome Application for Running Plugins");
-		
+		// TODO TODO: set stdout to route to the status module
 		this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		this.setLayout(new BorderLayout());
 		this.setSize(1440, 810);
