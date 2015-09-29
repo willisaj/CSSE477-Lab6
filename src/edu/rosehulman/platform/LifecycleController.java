@@ -44,6 +44,7 @@ public class LifecycleController implements ListDataListener, ListingModuleListe
 	}
 
 	public void stopPlugin(AbstractPlugin plugin) {
+		this.executionModule.clear();
 		pluginStatusModule.showInactivePlugin("TODO", this.playButtonListener);
 		plugin.onStop();
 	}
