@@ -2,7 +2,6 @@ package edu.rosehulman.platform;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -38,6 +37,8 @@ public class LifecycleController implements ListDataListener, ListingModuleListe
 		AbstractPlugin plugin = this.installedPlugins.get(path);
 		if (plugin != null) {
 			startPlugin(plugin);
+		} else {
+			System.err.println("plugin not found");
 		}
 	}
 
@@ -60,9 +61,9 @@ public class LifecycleController implements ListDataListener, ListingModuleListe
 	private void importPlugin(String path) {
 		JarClassLoader jarLoader = new JarClassLoader(PluginManager.PLUGIN_ROOT + "/" + path);
 		/* Load the class from the jar file and resolve it. */
-		Class c;
+		Class<?> c;
 		try {
-			c = (Class<AbstractPlugin>) jarLoader.loadClass(AbstractPlugin.class.getName(), true);
+			c = (Class<?>) jarLoader.loadClass(AbstractPlugin.class.getName(), true);
 		} catch (ClassNotFoundException e1) {
 			System.err.println("Loading class failed");
 			return;
@@ -75,8 +76,7 @@ public class LifecycleController implements ListDataListener, ListingModuleListe
 		 */
 		Object o = null;
 		try {
-			Constructor ctor = c.getDeclaredConstructor(IExecutionModule.class);
-			o = ctor.newInstance(executionModule);
+			o = c.getDeclaredConstructor(IExecutionModule.class).newInstance(executionModule);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

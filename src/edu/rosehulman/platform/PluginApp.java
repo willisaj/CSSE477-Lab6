@@ -34,8 +34,6 @@ public class PluginApp extends JFrame {
 		// ExecutionModule
 		this.executionModule = new ExecutionModule();
 		this.add((JComponent) executionModule, BorderLayout.CENTER);
-		System.out.println(executionModule.getWidth());
-		
 
 		JPanel southPanel = new JPanel();
 		southPanel.setLayout(new BorderLayout());

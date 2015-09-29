@@ -1,10 +1,8 @@
 package edu.rosehulman.plugin;
 
-import javax.swing.JPanel;
-
 import edu.rosehulman.gui.IExecutionModule;
 
-public abstract class AbstractPlugin {
+public class AbstractPlugin {
 	protected boolean started = false;
 	protected boolean paused = false;
 	protected IExecutionModule executionModule;
@@ -48,6 +46,15 @@ public abstract class AbstractPlugin {
 			paused = false;
 		} else {
 			throw new IllegalStateException("Cannot resume a running or stopped plugin");
+		}
+	}
+	
+	public AbstractPlugin createInstance(IExecutionModule executionModule) {
+		try {
+			return getClass().getDeclaredConstructor(IExecutionModule.class).newInstance(executionModule);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
 		}
 	}
 }
