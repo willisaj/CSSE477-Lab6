@@ -10,10 +10,11 @@ import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
 
 import edu.rosehulman.gui.IExecutionModule;
+import edu.rosehulman.gui.ListingModuleListener;
 import edu.rosehulman.gui.PluginStatusModule;
 import edu.rosehulman.plugin.AbstractPlugin;
 
-public class LifecycleController implements ListDataListener {
+public class LifecycleController implements ListDataListener, ListingModuleListener {
 	private Map<String, AbstractPlugin> installedPlugins;
 	private AbstractPlugin activePlugin;
 	
@@ -28,6 +29,12 @@ public class LifecycleController implements ListDataListener {
 	public void startPlugin(AbstractPlugin plugin) {
 		pluginStatusModule.showActivePlugin("TODO", this.stopButtonListener, this.pauseButtonListener);
 		plugin.onStart();
+	}
+
+	@Override
+	public void startPlugin(String path) {
+		startPlugin(this.installedPlugins.get(path));
+		
 	}
 
 	public void stopPlugin(AbstractPlugin plugin) {

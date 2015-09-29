@@ -46,12 +46,14 @@ public class ListingModule extends JPanel {
 	private final DefaultListModel<String> listModel;
 	private final WatchService watcher;
 	private Dimension size;
+	private ListingModuleListener listener;
 
 	@SuppressWarnings("serial")
-	public ListingModule(String pathString, LifecycleController lifecycleControl) throws IOException {
+	public ListingModule(String pathString, LifecycleController lifecycleController) throws IOException {
 		size = new Dimension(MIN_WIDTH, MIN_HEIGHT);
 		listModel = new DefaultListModel<>();
-		listModel.addListDataListener(lifecycleControl);
+		listModel.addListDataListener(lifecycleController);
+		this.listener = lifecycleController;
 
 		// Watch for directory changes
 		watcher = FileSystems.getDefault().newWatchService();
@@ -81,9 +83,8 @@ public class ListingModule extends JPanel {
 		new ListAction(listView, new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO: run selected plugin
 				System.out.println("Running plugin \"" + listView.getSelectedValue() + "\"");
-				
+				ListingModule.this.listener.startPlugin(listView.getSelectedValue());
 			}
 		});
 
