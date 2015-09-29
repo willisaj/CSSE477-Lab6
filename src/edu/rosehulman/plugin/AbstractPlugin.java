@@ -5,12 +5,12 @@ import javax.swing.JPanel;
 import edu.rosehulman.gui.IExecutionModule;
 
 public abstract class AbstractPlugin {
-	protected IExecutionModule panel;
 	protected boolean started = false;
 	protected boolean paused = false;
+	protected IExecutionModule executionModule;
 
 	public AbstractPlugin(IExecutionModule executionModule) {
-		this.panel = executionModule;
+		this.executionModule = executionModule;
 	}
 
 	public void onStart() {
@@ -49,9 +49,5 @@ public abstract class AbstractPlugin {
 		} else {
 			throw new IllegalStateException("Cannot resume a running or stopped plugin");
 		}
-	}
-	
-	protected IExecutionModule getExecutionModule() {
-		return this.panel;
 	}
 }
