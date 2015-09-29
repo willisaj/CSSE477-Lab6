@@ -11,9 +11,9 @@ import javax.swing.JPanel;
 public class PluginStatusModule extends JPanel {
 	
 	private static String NO_PLUGIN_STRING = "No plugin selected.";
-	private static String INACTIVE_PLUGIN_STRING = "Press the button below to start the plugin.";
-	private static String ACTIVE_PLUGIN_STRING = "Stop or pause the plugins using the buttons below.";
-	private static String PAUSED_PLUGIN_STRING = "Press the button below to resume the plugin.";
+	private static String INACTIVE_PLUGIN_STRING = "<html>Press the button below to start the plugin.</html>";
+	private static String ACTIVE_PLUGIN_STRING = "<html>Stop or pause the plugins using the buttons below.</html>";
+	private static String PAUSED_PLUGIN_STRING = "<html>Press the button below to resume the plugin.</html?";
 	
 	public PluginStatusModule() {
 		this.setLayout(new BorderLayout());
