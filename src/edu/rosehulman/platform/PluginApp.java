@@ -3,11 +3,13 @@ package edu.rosehulman.platform;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintStream;
 
-import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
 import javax.swing.WindowConstants;
 
 import edu.rosehulman.gui.ExecutionModule;
@@ -59,11 +61,18 @@ public class PluginApp extends JFrame {
 
 		this.add(southPanel, BorderLayout.SOUTH);
 	}
+	
+	public IStatusModule getStatusModule() {
+		return this.statusModule;
+	}
 
 	public static void main(String[] args) throws IOException {
 		PluginApp app = new PluginApp();
 		// TODO TODO: set stdout and stderr to route to the status modules
+		StatusOutputStream statusOutputStream = new StatusOutputStream(app.getStatusModule().getStatusTextArea());
+		PrintStream printStream = new PrintStream(statusOutputStream);
+		System.setOut(printStream);
+		System.setErr(printStream);
 		app.setVisible(true);
 	}
-
 }
