@@ -65,7 +65,6 @@ public class LifecycleController implements ListDataListener, ListingModuleListe
 		Class<?> c;
 		try {
 			String className = path.substring(0, path.lastIndexOf('.'));
-			System.out.println(className);
 			c = (Class<?>) jarLoader.loadClass(className, true);
 		} catch (ClassNotFoundException e1) {
 			e1.printStackTrace();
@@ -90,7 +89,9 @@ public class LifecycleController implements ListDataListener, ListingModuleListe
 	}
 
 	public void deletePlugin(String path) {
-
+		if (!(this.installedPlugins.get(path) == this.activePlugin)) {
+			this.installedPlugins.remove(path);
+		}
 	}
 
 	@Override
@@ -106,8 +107,10 @@ public class LifecycleController implements ListDataListener, ListingModuleListe
 	}
 
 	@Override
-	public void intervalRemoved(ListDataEvent arg0) {
-
+	public void intervalRemoved(ListDataEvent event) {
+		ListModel<String> listModel = (ListModel<String>) event.getSource();
+		String path = listModel.getElementAt(event.getIndex0());
+		deletePlugin(path);
 	}
 
 	private ActionListener playButtonListener = new ActionListener() {

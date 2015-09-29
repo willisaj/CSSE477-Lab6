@@ -13,7 +13,6 @@ public class AbstractPlugin {
 
 	public void onStart() {
 		// TODO: default start
-		System.out.println("TEST");
 		System.out.println(this.getClass().getSimpleName());
 		
 		if (!started) {
