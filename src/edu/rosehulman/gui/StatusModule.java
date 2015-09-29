@@ -8,7 +8,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
-public class StatusModule extends JPanel {
+public class StatusModule extends JPanel implements IStatusModule {
 	private JScrollPane scrollPane;
 	private JTextArea statusMessages;
 	

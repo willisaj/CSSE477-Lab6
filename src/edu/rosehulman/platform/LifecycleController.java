@@ -1,55 +1,59 @@
 package edu.rosehulman.platform;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.lang.reflect.Constructor;
 import java.util.Map;
 
-import javax.swing.JPanel;
 import javax.swing.ListModel;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
 
 import edu.rosehulman.gui.IExecutionModule;
+import edu.rosehulman.gui.PluginStatusModule;
 import edu.rosehulman.plugin.AbstractPlugin;
 
 public class LifecycleController implements ListDataListener {
 	private Map<String, AbstractPlugin> installedPlugins;
-	private IExecutionModule executionPanel;
-
-	public LifecycleController(IExecutionModule executionPanel) {
-		this.executionPanel = executionPanel;
-	}
+	private AbstractPlugin activePlugin;
 	
-	public void startPlugin(AbstractPlugin plugin) {
-		// TODO: system-level startup
+	private IExecutionModule executionPanel;
+	private PluginStatusModule pluginStatusModule;
 
+	public LifecycleController(IExecutionModule executionPanel, PluginStatusModule pluginStatusModule) {
+		this.executionPanel = executionPanel;
+		this.pluginStatusModule = pluginStatusModule;
+	}
+
+	public void startPlugin(AbstractPlugin plugin) {
+		pluginStatusModule.showActivePlugin("TODO", this.stopButtonListener, this.pauseButtonListener);
 		plugin.onStart();
 	}
 
 	public void stopPlugin(AbstractPlugin plugin) {
-		// TODO: system-level stop
-
+		pluginStatusModule.showInactivePlugin("TODO", this.playButtonListener);
 		plugin.onStop();
 	}
 
 	public void pausePlugin(AbstractPlugin plugin) {
-		// TODO: system-level pause
-
+		pluginStatusModule.showPausedPlugin("TODO", this.resumeButtonListener);
 		plugin.onPause();
 
 	}
 
 	public void resumePlugin(AbstractPlugin plugin) {
-		// TODO: system-level resume
-
+		pluginStatusModule.showActivePlugin("TODO", this.stopButtonListener, this.pauseButtonListener);
 		plugin.onResume();
 	}
 
 	private void importPlugin(String path) {
-		JarClassLoader jarLoader = new JarClassLoader(PluginManager.PLUGIN_ROOT + "/" + path);
+		JarClassLoader jarLoader = new JarClassLoader(PluginManager.PLUGIN_ROOT
+				+ "/" + path);
 		/* Load the class from the jar file and resolve it. */
 		Class c;
 		try {
-			c = (Class<AbstractPlugin>) jarLoader.loadClass(AbstractPlugin.class.getName(), true);
+			c = (Class<AbstractPlugin>) jarLoader.loadClass(
+					AbstractPlugin.class.getName(), true);
 		} catch (ClassNotFoundException e1) {
 			System.err.println("Loading class failed");
 			return;
@@ -65,7 +69,7 @@ public class LifecycleController implements ListDataListener {
 			Constructor ctor = c.getDeclaredConstructor(IExecutionModule.class);
 			o = ctor.newInstance(executionPanel);
 		} catch (Exception e) {
-			System.err.println("Failed to load class: " + e);
+			e.printStackTrace();
 		}
 		if (o instanceof AbstractPlugin) {
 			AbstractPlugin plugin = (AbstractPlugin) o;
@@ -91,6 +95,34 @@ public class LifecycleController implements ListDataListener {
 
 	@Override
 	public void intervalRemoved(ListDataEvent arg0) {
-		
+
 	}
+
+	private ActionListener playButtonListener = new ActionListener() {
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			startPlugin(activePlugin);
+		}
+	};
+
+	private ActionListener stopButtonListener = new ActionListener() {
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			stopPlugin(activePlugin);
+		}
+	};
+	
+	private ActionListener pauseButtonListener = new ActionListener() {
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			pausePlugin(activePlugin);
+		}
+	};
+	
+	private ActionListener resumeButtonListener = new ActionListener() {
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			resumePlugin(activePlugin);
+		}
+	};
 }
