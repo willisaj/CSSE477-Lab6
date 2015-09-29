@@ -3,6 +3,7 @@ package edu.rosehulman.platform;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.lang.reflect.Constructor;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.swing.ListModel;
@@ -17,13 +18,14 @@ import edu.rosehulman.plugin.AbstractPlugin;
 public class LifecycleController implements ListDataListener, ListingModuleListener {
 	private Map<String, AbstractPlugin> installedPlugins;
 	private AbstractPlugin activePlugin;
-	
-	private IExecutionModule executionPanel;
+
+	private IExecutionModule executionModule;
 	private PluginStatusModule pluginStatusModule;
 
-	public LifecycleController(IExecutionModule executionPanel, PluginStatusModule pluginStatusModule) {
-		this.executionPanel = executionPanel;
+	public LifecycleController(IExecutionModule executionModule, PluginStatusModule pluginStatusModule) {
+		this.executionModule = executionModule;
 		this.pluginStatusModule = pluginStatusModule;
+		this.installedPlugins = new HashMap<>();
 	}
 
 	public void startPlugin(AbstractPlugin plugin) {
@@ -33,8 +35,10 @@ public class LifecycleController implements ListDataListener, ListingModuleListe
 
 	@Override
 	public void startPlugin(String path) {
-		startPlugin(this.installedPlugins.get(path));
-		
+		AbstractPlugin plugin = this.installedPlugins.get(path);
+		if (plugin != null) {
+			startPlugin(plugin);
+		}
 	}
 
 	public void stopPlugin(AbstractPlugin plugin) {
@@ -54,13 +58,11 @@ public class LifecycleController implements ListDataListener, ListingModuleListe
 	}
 
 	private void importPlugin(String path) {
-		JarClassLoader jarLoader = new JarClassLoader(PluginManager.PLUGIN_ROOT
-				+ "/" + path);
+		JarClassLoader jarLoader = new JarClassLoader(PluginManager.PLUGIN_ROOT + "/" + path);
 		/* Load the class from the jar file and resolve it. */
 		Class c;
 		try {
-			c = (Class<AbstractPlugin>) jarLoader.loadClass(
-					AbstractPlugin.class.getName(), true);
+			c = (Class<AbstractPlugin>) jarLoader.loadClass(AbstractPlugin.class.getName(), true);
 		} catch (ClassNotFoundException e1) {
 			System.err.println("Loading class failed");
 			return;
@@ -74,7 +76,7 @@ public class LifecycleController implements ListDataListener, ListingModuleListe
 		Object o = null;
 		try {
 			Constructor ctor = c.getDeclaredConstructor(IExecutionModule.class);
-			o = ctor.newInstance(executionPanel);
+			o = ctor.newInstance(executionModule);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -118,14 +120,14 @@ public class LifecycleController implements ListDataListener, ListingModuleListe
 			stopPlugin(activePlugin);
 		}
 	};
-	
+
 	private ActionListener pauseButtonListener = new ActionListener() {
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			pausePlugin(activePlugin);
 		}
 	};
-	
+
 	private ActionListener resumeButtonListener = new ActionListener() {
 		@Override
 		public void actionPerformed(ActionEvent arg0) {

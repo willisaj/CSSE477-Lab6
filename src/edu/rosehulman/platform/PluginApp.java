@@ -35,13 +35,7 @@ public class PluginApp extends JFrame {
 		this.executionModule = new ExecutionModule();
 		this.add((JComponent) executionModule, BorderLayout.CENTER);
 		System.out.println(executionModule.getWidth());
-
-		// Listing Module
-		ListingModule listing = new ListingModule("file:///"
-				+ PluginManager.PLUGIN_ROOT, lifecycleController);
-		listing.setSize(200, 610);
-		listing.setPreferredSize(new Dimension(200, 610));
-		this.add(listing, BorderLayout.WEST);
+		
 
 		JPanel southPanel = new JPanel();
 		southPanel.setLayout(new BorderLayout());
@@ -56,8 +50,14 @@ public class PluginApp extends JFrame {
 		this.pluginStatusModule.showNoPlugin();
 		southPanel.add(this.pluginStatusModule, BorderLayout.WEST);
 
-		// LifecycleControl
+		// LifecycleController
 		this.lifecycleController = new LifecycleController(executionModule, pluginStatusModule);
+		
+		// Listing Module
+		ListingModule listing = new ListingModule("file:///" + PluginManager.PLUGIN_ROOT, lifecycleController);
+		listing.setSize(200, 610);
+		listing.setPreferredSize(new Dimension(200, 610));
+		this.add(listing, BorderLayout.WEST);
 
 		this.add(southPanel, BorderLayout.SOUTH);
 	}
