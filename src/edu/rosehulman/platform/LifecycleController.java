@@ -2,74 +2,67 @@ package edu.rosehulman.platform;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.swing.ListModel;
-import javax.swing.event.ListDataEvent;
-import javax.swing.event.ListDataListener;
+import java.io.File;
 
 import edu.rosehulman.gui.IExecutionModule;
 import edu.rosehulman.gui.ListingModuleListener;
 import edu.rosehulman.gui.PluginStatusModule;
 import edu.rosehulman.plugin.AbstractPlugin;
 
-public class LifecycleController implements ListDataListener, ListingModuleListener {
-	private Map<String, AbstractPlugin> installedPlugins;
-	private AbstractPlugin activePlugin;
+public class LifecycleController implements ListingModuleListener {
+	public static final String PLUGIN_ROOT = new File("plugins").getAbsolutePath();
 
+	private AbstractPlugin activePlugin;
 	private IExecutionModule executionModule;
 	private PluginStatusModule pluginStatusModule;
+	private String activePluginPath;
 
 	public LifecycleController(IExecutionModule executionModule, PluginStatusModule pluginStatusModule) {
 		this.executionModule = executionModule;
 		this.pluginStatusModule = pluginStatusModule;
-		this.installedPlugins = new HashMap<>();
-	}
-
-	public void startPlugin(AbstractPlugin plugin) {
-		pluginStatusModule.showActivePlugin("TODO", this.stopButtonListener, this.pauseButtonListener);
-		plugin.onStart();
 	}
 
 	@Override
 	public void startPlugin(String path) {
-		AbstractPlugin plugin = this.installedPlugins.get(path);
+		AbstractPlugin plugin = importPlugin(path);
 		if (plugin != null) {
 			this.activePlugin = plugin;
-			startPlugin(plugin);
+			this.activePluginPath = path;
+
+			pluginStatusModule.showActivePlugin("RUNNING", this.stopButtonListener, this.pauseButtonListener);
+			plugin.onStart();
 		} else {
-			System.err.println("plugin not found");
+			System.out.println("plugin \"" + path + "\" not found");
 		}
 	}
 
 	public void stopPlugin(AbstractPlugin plugin) {
-		this.executionModule.clear();
-		pluginStatusModule.showInactivePlugin("TODO", this.playButtonListener);
 		plugin.onStop();
+		pluginStatusModule.showInactivePlugin("STOPPED", this.playButtonListener);
+		this.executionModule.clear();
+		this.activePlugin = null;
 	}
 
 	public void pausePlugin(AbstractPlugin plugin) {
-		pluginStatusModule.showPausedPlugin("TODO", this.resumeButtonListener);
+		pluginStatusModule.showPausedPlugin("PAUSED", this.resumeButtonListener);
 		plugin.onPause();
-
 	}
 
 	public void resumePlugin(AbstractPlugin plugin) {
-		pluginStatusModule.showActivePlugin("TODO", this.stopButtonListener, this.pauseButtonListener);
+		pluginStatusModule.showActivePlugin("RUNNING", this.stopButtonListener, this.pauseButtonListener);
 		plugin.onResume();
 	}
 
-	private void importPlugin(String path) {
-		JarClassLoader jarLoader = new JarClassLoader(PluginManager.PLUGIN_ROOT + "/" + path);
+	private AbstractPlugin importPlugin(String path) {
+		JarClassLoader jarLoader = new JarClassLoader(PLUGIN_ROOT + "/" + path);
 		/* Load the class from the jar file and resolve it. */
 		Class<?> c;
 		try {
 			String className = path.substring(0, path.lastIndexOf('.'));
 			c = (Class<?>) jarLoader.loadClass(className, true);
 		} catch (ClassNotFoundException e1) {
-			e1.printStackTrace();
-			return;
+			 e1.printStackTrace();
+			return null;
 		}
 		/*
 		 * Create an instance of the class.
@@ -81,43 +74,20 @@ public class LifecycleController implements ListDataListener, ListingModuleListe
 		try {
 			o = c.getDeclaredConstructor(IExecutionModule.class).newInstance(executionModule);
 		} catch (Exception e) {
-			e.printStackTrace();
+			 e.printStackTrace();
+			return null;
 		}
 		if (o instanceof AbstractPlugin) {
 			AbstractPlugin plugin = (AbstractPlugin) o;
-			this.installedPlugins.put(path, plugin);
+			return plugin;
 		}
-	}
-
-	public void deletePlugin(String path) {
-		if (!(this.installedPlugins.get(path) == this.activePlugin)) {
-			this.installedPlugins.remove(path);
-		}
-	}
-
-	@Override
-	public void contentsChanged(ListDataEvent ignored) {
-		// unused
-	}
-
-	@Override
-	public void intervalAdded(ListDataEvent event) {
-		ListModel<String> listModel = (ListModel<String>) event.getSource();
-		String path = listModel.getElementAt(event.getIndex0());
-		importPlugin(path);
-	}
-
-	@Override
-	public void intervalRemoved(ListDataEvent event) {
-		ListModel<String> listModel = (ListModel<String>) event.getSource();
-		String path = listModel.getElementAt(event.getIndex0());
-		deletePlugin(path);
+		return null;
 	}
 
 	private ActionListener playButtonListener = new ActionListener() {
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			startPlugin(activePlugin);
+			startPlugin(activePluginPath);
 		}
 	};
 

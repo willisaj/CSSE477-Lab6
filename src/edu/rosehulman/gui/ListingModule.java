@@ -35,7 +35,7 @@ import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
 
 import edu.rosehulman.platform.LifecycleController;
-import edu.rosehulman.platform.PluginManager;
+import edu.rosehulman.platform.PluginApp;
 
 public class ListingModule extends JPanel {
 	private static final int MIN_HEIGHT = 800;
@@ -52,7 +52,6 @@ public class ListingModule extends JPanel {
 	public ListingModule(String pathString, LifecycleController lifecycleController) throws IOException {
 		size = new Dimension(MIN_WIDTH, MIN_HEIGHT);
 		listModel = new DefaultListModel<>();
-		listModel.addListDataListener(lifecycleController);
 		this.listener = lifecycleController;
 
 		// Watch for directory changes
@@ -160,7 +159,7 @@ public class ListingModule extends JPanel {
 	public static void main(String[] args) throws IOException {
 		JFrame window = new JFrame("ListModule test");
 		window.setSize(new Dimension(MIN_WIDTH, MIN_HEIGHT));
-		ListingModule module = new ListingModule("file:///" + PluginManager.PLUGIN_ROOT, null);
+		ListingModule module = new ListingModule("file:///" + LifecycleController.PLUGIN_ROOT, null);
 		window.add(module);
 		window.setVisible(true);
 		
