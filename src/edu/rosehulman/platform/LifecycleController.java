@@ -36,6 +36,7 @@ public class LifecycleController implements ListDataListener, ListingModuleListe
 	public void startPlugin(String path) {
 		AbstractPlugin plugin = this.installedPlugins.get(path);
 		if (plugin != null) {
+			this.activePlugin = plugin;
 			startPlugin(plugin);
 		} else {
 			System.err.println("plugin not found");
@@ -63,9 +64,11 @@ public class LifecycleController implements ListDataListener, ListingModuleListe
 		/* Load the class from the jar file and resolve it. */
 		Class<?> c;
 		try {
-			c = (Class<?>) jarLoader.loadClass(AbstractPlugin.class.getName(), true);
+			String className = path.substring(0, path.lastIndexOf('.'));
+			System.out.println(className);
+			c = (Class<?>) jarLoader.loadClass(className, true);
 		} catch (ClassNotFoundException e1) {
-			System.err.println("Loading class failed");
+			e1.printStackTrace();
 			return;
 		}
 		/*

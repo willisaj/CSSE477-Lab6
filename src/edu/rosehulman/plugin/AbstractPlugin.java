@@ -13,6 +13,9 @@ public class AbstractPlugin {
 
 	public void onStart() {
 		// TODO: default start
+		System.out.println("TEST");
+		System.out.println(this.getClass().getSimpleName());
+		
 		if (!started) {
 			started = true;
 			paused = false;
@@ -47,6 +50,10 @@ public class AbstractPlugin {
 		} else {
 			throw new IllegalStateException("Cannot resume a running or stopped plugin");
 		}
+	}
+	
+	public IExecutionModule getExecutionModule() {
+		return this.executionModule;
 	}
 	
 	public AbstractPlugin createInstance(IExecutionModule executionModule) {

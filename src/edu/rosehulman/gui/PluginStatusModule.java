@@ -52,6 +52,8 @@ public class PluginStatusModule extends JPanel {
 		pauseButton.addActionListener(pauseListener);
 		buttonPanel.add(pauseButton, BorderLayout.EAST);
 		
+		this.add(buttonPanel, BorderLayout.SOUTH);
+		
 		this.refresh();
 	}
 	
